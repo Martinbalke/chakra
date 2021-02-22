@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import request from 'superagent';
+import { Grid } from '@chakra-ui/react'
+import UserCard from './UserCard'
 
 function Pagination() {
 	const [userData, setUserData] = useState([]);
@@ -15,7 +17,7 @@ function Pagination() {
 					name: `${user.name.first} ${user.name.last}`,
 					username: `${user.login.username}`,
 					age: `${user.dob.age}`,
-					picture: `${user.picture.medium}`,
+					picture: `${user.picture.large}`,
 				};
 			});
 
@@ -25,35 +27,30 @@ function Pagination() {
 	}, []);
 
 	return (
-			<div className='pagination'>
-				{userData.slice(activePage * 10, activePage * 10 + 10).map((user) => {
-					return (
-						<div key={user.name}>
-							<h3>{user.name}</h3>
-							<h3>{user.username}</h3>
-							<p>{user.age}</p>
-							<img src={user.picture} alt='personal photograph' />
-						</div>
-					);
-				})}
-				<div>
-					<button onClick={() => setActivePage(activePage + 1)}>+</button>
-					{pageNumbers.map((number) => (
-						<button
-							key={number}
-							style={
-								activePage === number
-									? { backgroundColor: 'blue', color: 'white' }
-									: { backgroundColor: '' }
-							}
-							onClick={() => setActivePage(number)}
-						>
-							{number}
-						</button>
-					))}
-					<button onClick={() => setActivePage(activePage - 1)}>-</button>
-				</div>
+    <Grid className='pagination' templateColumns='repeat(5, 1fr)' gap={6} margin='1rem'>
+			{userData.slice(activePage * 10, activePage * 10 + 10).map((user) => {
+				return (
+          <UserCard picture={user.picture} name={user.name} age={user.age} username={ user.username}/>
+				);
+			})}
+			<div>
+				<button onClick={() => setActivePage(activePage + 1)}>+</button>
+				{pageNumbers.map((number) => (
+					<button
+						key={number}
+						style={
+							activePage === number
+								? { backgroundColor: 'blue', color: 'white' }
+								: { backgroundColor: '' }
+						}
+						onClick={() => setActivePage(number)}
+					>
+						{number}
+					</button>
+				))}
+				<button onClick={() => setActivePage(activePage - 1)}>-</button>
 			</div>
+		</Grid>
 	);
 }
 
